@@ -56,7 +56,7 @@ const createIDGenerator = () => {
 const generateRandomID = createIDGenerator();
 
 const createMessage = () => Array.from(
-  {length: getRandomInteger (MESSAGE_MIN_COUNT, MESSAGE_MAX_COUNT)},
+  {length: getRandomInteger(MESSAGE_MIN_COUNT, MESSAGE_MAX_COUNT)},
   () => getRandomArrayElement(COMMENTS),
 ).join(' ');
 
@@ -78,9 +78,9 @@ const createPicture = (index) => ({
   )
 });
 
-const getMorePictures = () => Array.from(
+const generateMorePictures = () => Array.from(
   {length: PICTURE_COUNT},
   (_, index) => createPicture(index + 1)
 );
 
-getMorePictures();
+generateMorePictures();
