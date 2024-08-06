@@ -1,3 +1,4 @@
 import {generateMorePictures} from './mock-data.js';
+import {generateGallery} from './gallery.js';
 
-generateMorePictures();
+generateGallery(generateMorePictures());
