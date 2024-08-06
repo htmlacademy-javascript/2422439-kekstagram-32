@@ -68,8 +68,10 @@ function checkMeetingTime(dayStart, dayEnd, meetingStart, meetingDuration) {
 '14:00' - начало встречи
 90 - продолжительность встречи в минутах
 */
+
 checkMeetingTime('08:00', '17:30', '14:00', 90); // true
 checkMeetingTime('8:0', '10:0', '8:0', 120); // true
 checkMeetingTime('08:00', '14:30', '14:00', 90); // false
 checkMeetingTime('14:00', '17:30', '08:0', 90); // false
 checkMeetingTime('8:00', '17:30', '08:00', 900); // false
+
