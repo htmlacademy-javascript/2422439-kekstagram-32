@@ -1,25 +1,23 @@
-const galleryTemplate = document.querySelector('#picture').content.querySelector('.picture');
+import {generateThumbnails} from './thumbnail.js';
+import {showBigPicture} from './big-picture.js';
+
 const container = document.querySelector('.pictures');
 
-const createCard = ({url, description, likes, comments}) => {
-  const newCard = galleryTemplate.cloneNode(true);
-  const newCardImage = newCard.querySelector('.picture__img');
-  newCardImage.src = url;
-  newCardImage.alt = description;
-  newCard.querySelector('.picture__likes').textContent = likes;
-  newCard.querySelector('.picture__comments').textContent = comments.length;
+const renderGallery = (pictures) => {
+  container.addEventListener('click', (evt) => {
+    const thumbnail = evt.target.closest('[data-thumbnail-id]');
+    if (!thumbnail) {
+      return;
+    }
 
-  return newCard;
-};
-
-const generateGallery = (pictures) => {
-  const fragment = document.createDocumentFragment();
-  pictures.forEach((picture) => {
-    const newCard = createCard(picture);
-    fragment.append(newCard);
+    evt.preventDefault();
+    const picture = pictures.find(
+      (item) => item.id === +thumbnail.dataset.thumbnailId
+    );
+    showBigPicture(picture);
   });
 
-  container.append(fragment);
+  generateThumbnails(pictures, container);
 };
 
-export {generateGallery};
+export {renderGallery};
