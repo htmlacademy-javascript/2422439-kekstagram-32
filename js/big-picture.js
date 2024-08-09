@@ -21,7 +21,7 @@ const createComment = ({avatar, name, message}) => {
 };
 
 const renderComments = () => {
-  commentsShown +=COMMENTS_AT_A_TIME;
+  commentsShown += COMMENTS_AT_A_TIME;
   if (commentsShown >= comments.length) {
     commentsLoader.classList.add('hidden');
     commentsShown = comments.length;
