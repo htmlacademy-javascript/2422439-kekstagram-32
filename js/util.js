@@ -39,10 +39,23 @@ const debounce = (callback, timeoutDelay = 500) => {
   };
 };
 
+const shuffle = (elements) => {
+  const fixedElement = elements[0];
+  const restArray = elements.slice(1);
+  for (let i = restArray.length - 1; i > 1; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+
+    [restArray[i], restArray[j]] = [restArray[j], restArray[i]];
+  }
+
+  return [fixedElement,...restArray];
+};
+
 export {
   getRandomInteger,
   getRandomArrayElement,
   createIDGenerator,
   showAlert,
-  debounce
+  debounce,
+  shuffle
 };

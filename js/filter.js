@@ -1,5 +1,5 @@
 import {clearGallery} from './gallery.js';
-import {debounce} from './util.js';
+import {debounce,shuffle} from './util.js';
 import {renderGallery} from './gallery.js';
 
 const RANDOM_PICTURES_COUNT = 10;
@@ -20,7 +20,7 @@ const appyFilter = (filterId) => {
 
   switch(filterId) {
     case 'filter-random': {
-      pictures = pictures.slice(0, RANDOM_PICTURES_COUNT);
+      pictures = shuffle(pictures.slice()).slice(0, RANDOM_PICTURES_COUNT);
       break;
     }
     case 'filter-discussed': {
