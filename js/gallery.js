@@ -3,6 +3,13 @@ import {showBigPicture} from './big-picture.js';
 
 const container = document.querySelector('.pictures');
 
+const clearGallery = () => {
+  const pictures = container.querySelectorAll('.picture');
+  pictures.forEach((picture) => {
+    picture.remove();
+  });
+};
+
 const renderGallery = (pictures) => {
   container.addEventListener('click', (evt) => {
     const thumbnail = evt.target.closest('[data-thumbnail-id]');
@@ -20,4 +27,4 @@ const renderGallery = (pictures) => {
   generateThumbnails(pictures, container);
 };
 
-export {renderGallery};
+export {renderGallery, clearGallery};
