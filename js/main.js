@@ -6,7 +6,7 @@ import {renderFilter} from './filter.js';
 import './form.js';
 
 getData().then((pictures) => {
-  renderGallery(generateMorePictures());
+  renderGallery(pictures);
   renderFilter(() => pictures);
 }).catch(() => {
   showAlert();

@@ -51,7 +51,19 @@ const setPreview = (file) => {
   }
 };
 
+const toggleSubmitButton = (isDisabled) => {
+  if (!submitButton) {
+    return;
+  }
+
+  submitButton.disabled = isDisabled;
+  submitButton.textContent = isDisabled
+    ? submitState.SUBMITTING
+    : submitState.DEFAULT;
+};
+
 const showModal = (file) => {
+  toggleSubmitButton(false);
   setPreview(file);
 
   overlay.classList.remove('hidden');
@@ -146,17 +158,6 @@ const showSuccess = () => {
   showMessage(successMessage, dialog, closeButton);
 };
 
-const toggleSubmitButton = (isDisabled) => {
-  if (!submitButton) {
-    return;
-  }
-
-  submitButton.disabled = isDisabled;
-  submitButton.textContent = isDisabled
-    ? submitState.SUBMITTING
-    : submitState.DEFAULT;
-};
-
 const onFormSubmit = (evt) => {
   evt.preventDefault();
   if (pristine.validate()) {
@@ -166,8 +167,6 @@ const onFormSubmit = (evt) => {
       hideModal();
     }).catch(() => {
       showError();
-    }).finally(() => {
-      toggleSubmitButton(false);
     });
   }
 };

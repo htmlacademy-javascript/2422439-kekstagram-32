@@ -2,7 +2,7 @@ import {clearGallery} from './gallery.js';
 import {debounce,shuffle} from './util.js';
 import {renderGallery} from './gallery.js';
 
-const RANDOM_PICTURES_COUNT = 5;
+const RANDOM_PICTURES_COUNT = 10;
 const filter = document.querySelector('.img-filters');
 const filterForm = document.querySelector('.img-filters__form');
 const filterButtons = document.querySelectorAll('.img-filters__button');
@@ -31,6 +31,10 @@ const appyFilter = (filterId, getPictures) => {
   renderGallery(pictures);
 };
 
+const setFilter = debounce((filterId, getPictures) => {
+  appyFilter(filterId, getPictures);
+});
+
 const onFilterClick = (evt, getPictures) => {
   const target = evt.target;
   const currentFilter = filterForm.querySelector('.img-filters__button--active');
@@ -41,8 +45,7 @@ const onFilterClick = (evt, getPictures) => {
 
     resetFilter();
     target.classList.add('img-filters__button--active');
-    const setFilter = debounce(() => appyFilter(target.id, getPictures));
-    setFilter();
+    setFilter(target.id, getPictures);
   }
 };
 

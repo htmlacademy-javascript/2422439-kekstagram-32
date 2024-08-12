@@ -1,5 +1,5 @@
 const GET_URL = 'https://32.javascript.htmlacademy.pro/kekstagram/data';
-const POST_URL = 'https://32.javascript.htmlacademy.pro/kekstagram';
+const POST_URL = 'https://32.javascript.htmlacademy.pro/kekstagram/';
 
 const validateResponse = (response) => {
   if (!response.ok) {
