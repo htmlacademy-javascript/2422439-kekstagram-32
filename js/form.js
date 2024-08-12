@@ -1,5 +1,6 @@
 import {resetScale} from './scale.js';
 import {resetEffects} from './effect.js';
+import {sendData} from './api-client.js';
 
 const MAX_HASHTAG_COUNT = 5;
 const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
@@ -9,13 +10,22 @@ const errorText = {
   INVALID_HASHTAG: 'Неправильный хэштег',
 };
 
+const submitState = {
+  DEFAULT: 'Опубликовать',
+  SUBMITTING: 'Опубликоваю...',
+};
+
 const body = document.querySelector('body');
 const form = document.querySelector('.img-upload__form');
+const submitButton = document.querySelector('.img-upload__submit');
 const overlay = form.querySelector('.img-upload__overlay');
 const cancelButton = form.querySelector('.img-upload__cancel');
 const fileField = form.querySelector('.img-upload__input');
 const hashtagField = form.querySelector('.text__hashtags');
 const commentField = form.querySelector('.text__description');
+const errorTemplate = document.querySelector('#error').content.querySelector('.error');
+const successTemplate = document.querySelector('#success').content.querySelector('.success');
+let isMessageShown = false;
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
@@ -58,7 +68,7 @@ const hasUniqueTags = (value) => {
 };
 
 function onDocumentKeydown(evt) {
-  if (evt.key === 'Escape' && !isTextFieldFocused()) {
+  if (evt.key === 'Escape' && !isTextFieldFocused() && !isMessageShown) {
     evt.preventDefault();
     hideModal();
   }
@@ -72,9 +82,71 @@ const onFileInputChange = () => {
   showModal();
 };
 
+const showMessage = (dialogOverlay, dialog, closeButton) => {
+  isMessageShown = true;
+  closeButton.addEventListener('click', () => {
+    isMessageShown = false;
+    dialogOverlay.remove();
+  }, { once: true });
+
+  document.addEventListener('keydown', (evt) => {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      isMessageShown = false;
+      dialogOverlay.remove();
+    }
+  }, { once: true });
+
+  dialogOverlay.addEventListener('click', (evt) => {
+    if(!dialog.contains(evt.target)) {
+      isMessageShown = false;
+      dialogOverlay.remove();
+    }
+  });
+
+  document.body.insertBefore(dialogOverlay, document.body.lastChild);
+};
+
+const showError = () => {
+  const errorMessage = errorTemplate.cloneNode(true);
+  const closeButton = errorMessage.querySelector('.error__button');
+  const dialog = errorMessage.querySelector('.error__inner');
+
+  showMessage(errorMessage, dialog, closeButton);
+};
+
+const showSuccess = () => {
+  const successMessage = successTemplate.cloneNode(true);
+  const closeButton = successMessage.querySelector('.success__button');
+  const dialog = successMessage.querySelector('.success__inner');
+
+  showMessage(successMessage, dialog, closeButton);
+};
+
+const toggleSubmitButton = (isDisabled) => {
+  if (!submitButton) {
+    return;
+  }
+
+  submitButton.disabled = isDisabled;
+  submitButton.textContent = isDisabled
+    ? submitState.SUBMITTING
+    : submitState.DEFAULT;
+};
+
 const onFormSubmit = (evt) => {
   evt.preventDefault();
-  pristine.validate();
+  if (pristine.validate()) {
+    sendData(evt.target).then(() => {
+      toggleSubmitButton(true);
+      showSuccess();
+      hideModal();
+    }).catch(() => {
+      showError();
+    }).finally(() => {
+      toggleSubmitButton(false);
+    });
+  }
 };
 
 pristine.addValidator(
@@ -84,6 +156,7 @@ pristine.addValidator(
   3,
   true
 );
+
 pristine.addValidator(
   hashtagField,
   hasUniqueTags,
@@ -91,6 +164,7 @@ pristine.addValidator(
   2,
   true
 );
+
 pristine.addValidator(
   hashtagField,
   hasValidTags,

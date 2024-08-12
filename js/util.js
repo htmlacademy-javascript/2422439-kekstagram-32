@@ -1,3 +1,7 @@
+const ALERT_SHOW_TIME = 5000;
+
+const dataErrorTemplate = document.querySelector('#data-error').content.querySelector('.data-error');
+
 const getRandomInteger = (a, b) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
@@ -16,9 +20,20 @@ const createIDGenerator = () => {
   };
 };
 
+const showAlert = () => {
+  const newMessage = dataErrorTemplate.cloneNode(true);
+  document.body.insertBefore(newMessage, document.body.lastChild);
+
+  setTimeout(() => {
+    if (newMessage) {
+      newMessage.remove();
+    }
+  }, ALERT_SHOW_TIME);
+};
 
 export {
   getRandomInteger,
   getRandomArrayElement,
-  createIDGenerator
+  createIDGenerator,
+  showAlert
 };
