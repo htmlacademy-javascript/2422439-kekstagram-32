@@ -4,6 +4,8 @@ import {sendData} from './api-client.js';
 
 const MAX_HASHTAG_COUNT = 5;
 const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
+const SUPPORTED_FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+
 const errorText = {
   INVALID_COUNT: `Максимум ${MAX_HASHTAG_COUNT} хэштегов`,
   NOT_UNIQUE: 'Хэштеги должны быть уникальными',
@@ -25,6 +27,9 @@ const hashtagField = form.querySelector('.text__hashtags');
 const commentField = form.querySelector('.text__description');
 const errorTemplate = document.querySelector('#error').content.querySelector('.error');
 const successTemplate = document.querySelector('#success').content.querySelector('.success');
+const imagePreview = document.querySelector('.img-upload__preview > img');
+const previewThumbnails = document.querySelectorAll('.effects__preview');
+
 let isMessageShown = false;
 
 const pristine = new Pristine(form, {
@@ -33,7 +38,22 @@ const pristine = new Pristine(form, {
   errorTextClass: 'img-upload__field-wrapper--error',
 });
 
-const showModal = () => {
+const setPreview = (file) => {
+  const fileName = file.name.toLowerCase();
+  const matches = SUPPORTED_FILE_TYPES.some((it) => fileName.endsWith(it));
+  if (matches) {
+    const objectUrl = URL.createObjectURL(file);
+    imagePreview.src = objectUrl;
+
+    previewThumbnails.forEach((thumbnail) => {
+      thumbnail.style.backgroundImage = `url(${objectUrl})`;
+    });
+  }
+};
+
+const showModal = (file) => {
+  setPreview(file);
+
   overlay.classList.remove('hidden');
   body.classList.add('modal-open');
   document.addEventListener('keydown', onDocumentKeydown);
@@ -79,7 +99,10 @@ const onCancelButtonClick = () => {
 };
 
 const onFileInputChange = () => {
-  showModal();
+  const files = fileField.files;
+  if (files.length > 0) {
+    showModal(files[0]);
+  }
 };
 
 const showMessage = (dialogOverlay, dialog, closeButton) => {
