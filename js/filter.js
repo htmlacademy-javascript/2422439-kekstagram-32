@@ -1,11 +1,12 @@
 import {clearGallery} from './gallery.js';
-import {debounce,shuffle} from './util.js';
+import {debounce} from './util.js';
 import {renderGallery} from './gallery.js';
 
 const RANDOM_PICTURES_COUNT = 10;
 const filter = document.querySelector('.img-filters');
 const filterForm = document.querySelector('.img-filters__form');
 const filterButtons = document.querySelectorAll('.img-filters__button');
+let cards = null;
 
 const resetFilter = () => {
   filterButtons?.forEach((btn) => {
@@ -13,13 +14,13 @@ const resetFilter = () => {
   });
 };
 
-const appyFilter = (filterId, getPictures) => {
-  let pictures = getPictures();
+const appyFilter = (filterId) => {
+  let pictures = cards;
   clearGallery();
 
   switch(filterId) {
     case 'filter-random': {
-      pictures = shuffle(pictures.slice()).slice(0, RANDOM_PICTURES_COUNT);
+      pictures = pictures.slice(0, RANDOM_PICTURES_COUNT);
       break;
     }
     case 'filter-discussed': {
@@ -31,11 +32,11 @@ const appyFilter = (filterId, getPictures) => {
   renderGallery(pictures);
 };
 
-const setFilter = debounce((filterId, getPictures) => {
-  appyFilter(filterId, getPictures);
+const setFilter = debounce((filterId) => {
+  appyFilter(filterId);
 });
 
-const onFilterClick = (evt, getPictures) => {
+const onFilterClick = (evt) => {
   const target = evt.target;
   const currentFilter = filterForm.querySelector('.img-filters__button--active');
   if (target.classList.contains('img-filters__button')) {
@@ -45,15 +46,22 @@ const onFilterClick = (evt, getPictures) => {
 
     resetFilter();
     target.classList.add('img-filters__button--active');
-    setFilter(target.id, getPictures);
+    setFilter(target.id);
   }
 };
 
-const renderFilter = (getPictures) => {
+const prepareFilter = () => {
+  filterForm?.addEventListener('click', onFilterClick);
+};
+
+const renderFilter = (pictures) => {
+  cards = pictures;
   filter?.classList.remove('img-filters--inactive');
-  filterForm?.addEventListener('click', (evt) => onFilterClick(evt, getPictures));
+  const currentFilter = filterForm.querySelector('.img-filters__button--active');
+  appyFilter(currentFilter.id);
 };
 
 export {
-  renderFilter
+  renderFilter,
+  prepareFilter
 };
