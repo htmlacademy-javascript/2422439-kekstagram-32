@@ -106,6 +106,10 @@ noUiSlider.create(slider, {
   start: DEFAULT_EFFECT.max,
   step: DEFAULT_EFFECT.step,
   connect: 'lower',
+  format: {
+    to: (value) => Number.isInteger(value) ? value.toFixed(0) : value.toFixed(1),
+    from: (value) => parseFloat(value),
+  },
 });
 updateSlider();
 
