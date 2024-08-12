@@ -31,9 +31,29 @@ const showAlert = () => {
   }, ALERT_SHOW_TIME);
 };
 
+const debounce = (callback, timeoutDelay = 500) => {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+};
+
+const shuffle = (elements) => {
+  for (let i = elements.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+
+    [elements[i], elements[j]] = [elements[j], elements[i]];
+  }
+
+  return elements;
+};
+
 export {
   getRandomInteger,
   getRandomArrayElement,
   createIDGenerator,
-  showAlert
+  showAlert,
+  debounce,
+  shuffle
 };
