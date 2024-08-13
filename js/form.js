@@ -6,13 +6,13 @@ const MAX_HASHTAG_COUNT = 5;
 const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
 const SUPPORTED_FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
-const errorText = {
+const ErrorText = {
   INVALID_COUNT: `Максимум ${MAX_HASHTAG_COUNT} хэштегов`,
   NOT_UNIQUE: 'Хэштеги должны быть уникальными',
   INVALID_HASHTAG: 'Неправильный хэштег',
 };
 
-const submitState = {
+const SubmitState = {
   DEFAULT: 'Опубликовать',
   SUBMITTING: 'Опубликоваю...',
 };
@@ -58,8 +58,8 @@ const toggleSubmitButton = (isDisabled) => {
 
   submitButton.disabled = isDisabled;
   submitButton.textContent = isDisabled
-    ? submitState.SUBMITTING
-    : submitState.DEFAULT;
+    ? SubmitState.SUBMITTING
+    : SubmitState.DEFAULT;
 };
 
 const showModal = (file) => {
@@ -174,7 +174,7 @@ const onFormSubmit = (evt) => {
 pristine.addValidator(
   hashtagField,
   hasValidCount,
-  errorText.INVALID_COUNT,
+  ErrorText.INVALID_COUNT,
   3,
   true
 );
@@ -182,7 +182,7 @@ pristine.addValidator(
 pristine.addValidator(
   hashtagField,
   hasUniqueTags,
-  errorText.NOT_UNIQUE,
+  ErrorText.NOT_UNIQUE,
   2,
   true
 );
@@ -190,7 +190,7 @@ pristine.addValidator(
 pristine.addValidator(
   hashtagField,
   hasValidTags,
-  errorText.INVALID_HASHTAG,
+  ErrorText.INVALID_HASHTAG,
   1,
   true
 );
