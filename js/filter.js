@@ -6,6 +6,10 @@ const RANDOM_PICTURES_COUNT = 10;
 const filter = document.querySelector('.img-filters');
 const filterForm = document.querySelector('.img-filters__form');
 const filterButtons = document.querySelectorAll('.img-filters__button');
+const Filter = {
+  RANDOM: 'filter-random',
+  DISCUSSED: 'filter-discussed',
+};
 let cards = null;
 
 const resetFilter = () => {
@@ -14,16 +18,16 @@ const resetFilter = () => {
   });
 };
 
-const appyFilter = (filterId) => {
+const applyFilter = (filterId) => {
   let pictures = cards;
   clearGallery();
 
   switch(filterId) {
-    case 'filter-random': {
+    case Filter.RANDOM: {
       pictures = shuffle(pictures.slice()).slice(0, RANDOM_PICTURES_COUNT);
       break;
     }
-    case 'filter-discussed': {
+    case Filter.DISCUSSED: {
       pictures = pictures.slice().sort((a, b) => b.comments.length - a.comments.length);
       break;
     }
@@ -33,7 +37,7 @@ const appyFilter = (filterId) => {
 };
 
 const setFilter = debounce((filterId) => {
-  appyFilter(filterId);
+  applyFilter(filterId);
 });
 
 const onFilterClick = (evt) => {
@@ -58,7 +62,7 @@ const renderFilter = (pictures) => {
   cards = pictures;
   filter?.classList.remove('img-filters--inactive');
   const currentFilter = filterForm.querySelector('.img-filters__button--active');
-  appyFilter(currentFilter.id);
+  applyFilter(currentFilter.id);
 };
 
 export {
